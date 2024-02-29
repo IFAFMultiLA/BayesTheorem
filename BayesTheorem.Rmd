@@ -1,18 +1,21 @@
 ---
-title: "Tutorial"
-author: 
-email: 
+title: "How reliable are the results of a Covid test?"
+runtime: shiny_prerendered
+author: Markus Konrad, Prof. Dr. Martin Spott
+email: markus.konrad@htw-berlin.de
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
 output:
     learnrextra::tutorial:
         language: en
         apiserver: http://localhost:8000/
-runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
+require(RAppArmor) 
 library(learnr)
 library(gradethis)
+library(shiny)
+library(ggplot2)
 
 rmarkdown::find_pandoc(cache = FALSE)
 knitr::opts_chunk$set(echo = FALSE)
@@ -21,66 +24,110 @@ gradethis_setup()
 ```
 
 
-## Topic 1
+## The problem
 
-### Exercise 
+A person is feeling sick and decides to take a rapid COVID-19 test. Unfortunately, the test comes back positive.
 
-*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+![A positive test result](images/covid19test.jpg){height=300px}    
 
-Write the R code required to add two plus two:
+The test is positive, but how certain can the person be that they are truly infected with COVID-19, i.e., how certain can they be that the test result is accurate? The same question could be asked if the test were negative: How certain is it in this case that the person is truly *not* infected with COVID-19?
 
-```{r two-plus-two, exercise=TRUE}
+::: summary
 
-```
+#### The problem
 
-### Exercise with Code
+What is the probability that a person with a positive COVID-19 test is truly infected? What is the probability that a person with a negative COVID-19 test is truly healthy?
 
-*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+:::
 
-Now write a function that adds any two numbers and then call it:
+First, we take a look at the package insert of the rapid test in the hope of finding answers to our questions.
 
-```{r add-function, exercise=TRUE, exercise.lines = 5}
-add <- function() {
-  
-}
-```
+![The package insert of a commercial Covid-19 rapid test](images/test-performance-clungene2edit.png){height=350px}
 
-## Topic 2
 
-### Exercise with Hint
+::: summary
 
-*Here's an exercise where the chunk is pre-evaluated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
+#### Confusion Matrix of the Rapid Test
 
-Modify the following code to limit the number of rows printed to 5:
+|                 | **Person sick** | **Person healthy** | Total |
+|-----:|:----:|:----:|:----:|
+|  Test positive  |   139            |  3                | 142    |
+|  Test negative  |   13             |  462              | 475    |
+|  Total          |   152            |  465              | 617    |
 
-```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
-mtcars
-```
+:::
 
-```{r print-limit-hint}
-head(mtcars)
-```
+Let's try to decipher the information. Apparently, a study was conducted in which samples were taken from individuals. These samples were subjected to an RT-PCR test and a rapid test of the CLUNGENE brand via nasal swab, and the results of both tests were compared for each person.
 
-### Quiz
-
-*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
-
-Some questions to verify that you understand the purposes of various base and recommended R packages:
-
-```{r quiz}
-quiz(
-  question("Which package contains functions for installing other R packages?",
-    answer("base"),
-    answer("tools"),
-    answer("utils", correct = TRUE),
-    answer("codetools")
-  ),
-  question("Which of the R packages listed below are used to create plots?",
-    answer("lattice", correct = TRUE),
-    answer("tools"),
-    answer("stats"),
-    answer("grid", correct = TRUE)
-  )
+```{r clinicalstudy1}
+question_numeric("How many people participated in the study?",
+  answer(617, correct = TRUE),
+  allow_retry = TRUE
 )
 ```
 
+In this study, we are only interested in the accuracy of the rapid test. To do this, we assume that the result of the RT-PCR test is exact and that we know whether a person is infected with Covid-19 or not. We then check whether the rapid test correctly identifies the health status of the individuals or not. From here on, we will refer to the rapid test simply as *test*.
+
+When we evaluate the result of such a test, we can first determine that we are dealing with four possibilities:
+
+- The person is sick and the test is positive.
+- The person is sick and the test is negative.
+- The person is healthy and the test is positive.
+- The person is healthy and the test is negative.
+
+This can be presented as a table:
+
+|  | **Person sick** | **Person healthy** |
+|-----:|:----:|:----:|
+|  Test positive   |   true positive   |  false positive    |
+|  Test negative   |   false negative   |  true negative   |
+
+This table representation is called a *confusion matrix*.
+
+```{r clinicalstudy2}
+question_numeric("For how many persons in the study did the test provide a correct answer?",
+  answer(601, correct = TRUE),
+  allow_retry = TRUE
+)
+```
+
+Below the confusion matrix in the package insert, we find two percentage values: *PPA* and *NPA*. These were calculated from the values in the table and are quality measures for medical tests:
+
+**PPA** stands for *Positive Percent Agreement* or *True Positive Rate*, or *Sensitivity*. The value indicates how many percent of confirmed positive Covid cases are correctly identified as positive by the test. In our test, it is on average 91.4%.
+
+**NPA** stands for *Negative Percent Agreement* or *True Negative Rate*, or *Specificity*. The value indicates how many percent of confirmed negative Covid cases are correctly identified as negative by the test. In our test, it is on average 99.4%.
+
+```{r calc_sens}
+question_text("How was the true positive rate, or sensitivity of 91.4% calculated from the confusion matrix in the package insert?",
+  answer_fn(function (input) {
+      mark_as(gsub("\\s+", "", input) == "139/152*100")   # Leerzeichen im Text ignorieren
+  }),
+  allow_retry = TRUE,
+  trim = TRUE,
+  placeholder = 'Enter a percentage calculation in the form "a/b*100".'
+)
+```
+
+```{r calc_spec}
+question_text("How is the true negative rate, or specificity of 99.4% calculated from the confusion matrix in the package insert?",
+  answer_fn(function (input) {
+      mark_as(gsub("\\s+", "", input) == "462/465*100")   # Leerzeichen im Text ignorieren
+  }),
+  allow_retry = TRUE,
+  trim = TRUE,
+  placeholder = 'Enter a percentage calculation in the form "a/b*100".'
+)
+```
+
+```{r confmat}
+question("Let's assume a computer system can recognize whether a bone is damaged based on an X-ray image. It can recognize three different states: No damage, bruise, bone fracture. Can a confusion matrix also be created for such a system? If so, how many rows and columns would this matrix have?",
+  answer("2 rows und 2 colums"),
+  answer("2 rows und 3 colums"),
+  answer("3 rows und 2 colums"),
+  answer("3 rows und 3 colums", correct = TRUE),
+  answer("It is not possible to create a confusion matrix for such a computer system."),
+  allow_retry = TRUE
+)
+```
+
+Why do test accuracy, sensitivity, and specificity not answer our actual question, which we see in the summary at the top right? We will look at this on the following page.
