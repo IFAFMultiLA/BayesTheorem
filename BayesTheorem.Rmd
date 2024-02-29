@@ -24,9 +24,9 @@ gradethis_setup()
 
 # values for the examples
 prevalence <- 0.2 / 100.0   # P(S)
-sens <- 0.914   # P(T|K)
-spec <- 0.994   # P(~T|~K)
-pos_pred_val <- sens * prevalence / (sens * prevalence + (1-spec) * (1-prevalence))   # P(K|T)
+sens <- 0.914   # P(T|S)
+spec <- 0.994   # P(~T|~S)
+pos_pred_val <- sens * prevalence / (sens * prevalence + (1-spec) * (1-prevalence))   # P(S|T)
 ```
 
 ## The problem
@@ -215,7 +215,7 @@ The probability $P(T \mid S)$ is already given in the package insert as Sensitiv
 
 Finally, we are missing $P(T)$: the probability that a person – whether sick or healthy – receives a positive test result. Here, the *law of total probability* helps us, which allows us to add the probabilities for the two possibilities that lead to positive tests (person sick and person healthy), since they exclude each other:
 
-![Tree diagram with both possibilities that lead to positive tests](images/baum3.png){height=300px}
+![Tree diagram with both possibilities that lead to positive tests](images/tree3.png){height=300px}
 
 Thus, we get
 
@@ -743,7 +743,6 @@ grade_this({
 Create a plot with *ggplot2* that displays the negative predictive value as a function of prevalence. For the three different sensitivity values, three differently colored lines should be displayed.
 
 The resulting plot should look like this:
-
 
 ![](images/task_2c_plot.png){width=400px}
 
