@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = FALSE)
 gradethis_setup()
 
 # values for the examples
-prevalence <- 0.2 / 100.0   # P(K)
+prevalence <- 0.2 / 100.0   # P(S)
 sens <- 0.914   # P(T|K)
 spec <- 0.994   # P(~T|~K)
 pos_pred_val <- sens * prevalence / (sens * prevalence + (1-spec) * (1-prevalence))   # P(K|T)
@@ -145,8 +145,8 @@ To formalize the problem, we represent the procedure in the study as a tree diag
 
 So that we can calculate well later, we first define two events and their negation. These correspond to the possibilities mentioned above:
 
-- $K$: Person sick
-- $\overline K$: Person healthy
+- $S$: Person sick
+- $\overline S$: Person healthy
 - $T$: Test positive
 - $\overline T$: Test negative
 
@@ -154,7 +154,7 @@ So that we can calculate well later, we first define two events and their negati
 
 #### Definition of the Events
 
-- $K$: Person sick and $\overline K$: Person healthy
+- $S$: Person sick and $\overline S$: Person healthy
 - $T$: Test positive and $\overline T$: Test negative
 
 :::
@@ -163,10 +163,10 @@ We can transfer these events to a tree diagram, together with the associated pro
 
 ![Tree diagram with events and their probabilities](images/tree2.png){height=300px}
 
-As formulated in the question, we want to know the probability that a person is actually sick if the test is positive. This can be formulated using the above-defined events as *conditional probability* – the probability that a person is sick, given that the test is positive: $P(K \mid T)$. This probability is also called *positive predictive value*, but it does not appear in the above tree diagram. There, the events K and T are reversed as in $P(T \mid K)$.
+As formulated in the question, we want to know the probability that a person is actually sick if the test is positive. This can be formulated using the above-defined events as *conditional probability* – the probability that a person is sick, given that the test is positive: $P(S \mid T)$. This probability is also called *positive predictive value*, but it does not appear in the above tree diagram. There, the events $S$ and $T$ are reversed as in $P(T \mid S)$.
 
 ```{r P_T_K}
-question("What does the probability $P(T \\mid K)$ indicate?",
+question("What does the probability $P(T \\mid S)$ indicate?",
   answer("The probability that a test is positive when the tested person is sick.", correct = TRUE),
   answer("The probability that a person is healthy when they have a positive test."),
   answer("The probability that a person is sick when they have a positive test."),
@@ -175,43 +175,43 @@ question("What does the probability $P(T \\mid K)$ indicate?",
 )
 ```
 
-$P(T \mid K)$ is called *Sensitivity* and is a quality measure for a test, as we have already seen in the package insert. Sensitivity indicates how high the probability is that the test shows a positive result for a person who is actually sick and is therefore also called *True Positive Rate*.
+$P(T \mid S)$ is called *Sensitivity* and is a quality measure for a test, as we have already seen in the package insert. Sensitivity indicates how high the probability is that the test shows a positive result for a person who is actually sick and is therefore also called *True Positive Rate*.
 
-To calculate the actually sought *positive predictive value*, i.e., the conditional probability $P(K \mid T)$, we can use  **Bayes' Theorem**:
+To calculate the actually sought *positive predictive value*, i.e., the conditional probability $P(S \mid T)$, we can use  **Bayes' Theorem**:
 
 $$
-P(K \mid T) = \frac{P(T \mid K) P(K)}{P(T)}.
+P(S \mid T) = \frac{P(T \mid S) P(S)}{P(T)}.
 $$
 
-So what we need to calculate $P(K \mid T)$ are three probabilities: $P(K)$, $P(T \mid K)$, and $P(T)$.
+So what we need to calculate $P(S \mid T)$ are three probabilities: $P(S)$, $P(T \mid S)$, and $P(T)$.
 
 ::: summary
 
 #### Definition of Conditional Probabilities
 
-$P(K \mid T)$ – Probability that a person is actually sick, given that the test is positive
+$P(S \mid T)$ – Probability that a person is actually sick, given that the test is positive
 
 #### Bayes' Theorem
 
 $$
-P(K \mid T) = \frac{P(T \mid K) P(K)}{P(T)}.
+P(S \mid T) = \frac{P(T \mid S) P(S)}{P(T)}.
 $$
 
 :::
 
-$P(K)$ indicates how high the probability is generally to be infected with Corona at this time – completely independent of a test result. This value is also called *Prevalence.* We can never know this probability exactly, but we can take an estimated value that corresponds to the proportion of currently infected people in Germany. Let's first set $P(K) = `r prevalence * 100`\%$. This is roughly the prevalence during the first wave of Corona in spring 2020 in Germany.
+$P(S)$ indicates how high the probability is generally to be infected with Corona at this time – completely independent of a test result. This value is also called *Prevalence.* We can never know this probability exactly, but we can take an estimated value that corresponds to the proportion of currently infected people in Germany. Let's first set $P(S) = `r prevalence * 100`\%$. This is roughly the prevalence during the first wave of Corona in spring 2020 in Germany.
 
-One might also come up with the idea of reading $P(K)$ from the study in the package insert, but this is not sensible in most cases: the study that led to the results in the package insert precisely examines how well the test works in sick people, so that people with proven Covid infection were specifically tested, so that this cannot be spoken of as a cross-section of the population.
+One might also come up with the idea of reading $P(S)$ from the study in the package insert, but this is not sensible in most cases: the study that led to the results in the package insert precisely examines how well the test works in sick people, so that people with proven Covid infection were specifically tested, so that this cannot be spoken of as a cross-section of the population.
 
 ::: summary
 
 #### Definition of Conditional Probabilities
 
-$P(T \mid K)$ – Probability that a test shows a positive result, given that the person is actually sick (Sensitivity)
+$P(T \mid S)$ – Probability that a test shows a positive result, given that the person is actually sick (sensitivity)
 
 :::
 
-The probability $P(T \mid K)$ is already given in the package insert as Sensitivity.
+The probability $P(T \mid S)$ is already given in the package insert as Sensitivity.
 
 Finally, we are missing $P(T)$: the probability that a person – whether sick or healthy – receives a positive test result. Here, the *law of total probability* helps us, which allows us to add the probabilities for the two possibilities that lead to positive tests (person sick and person healthy), since they exclude each other:
 
@@ -220,18 +220,18 @@ Finally, we are missing $P(T)$: the probability that a person – whether sick o
 Thus, we get
 
 $$
-P(T) = P(T \mid K) P(K) + P(T \mid \overline K) P(\overline K),
+P(T) = P(T \mid S) P(S) + P(T \mid \overline S) P(\overline S),
 $$
 
 and thus
 
 $$
-P(K \mid T) = \frac{P(T \mid K) P(K)}{P(T)} = \frac{P(T \mid K) P(K)}{P(T \mid K) P(K) + P(T \mid \overline K) P(\overline K)}.
+P(S \mid T) = \frac{P(T \mid S) P(S)}{P(T)} = \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) P(\overline S)}.
 $$
 
-However, this brings us two new problems: we need $P(T \mid \overline K)$ and $P(\overline K)$. Fortunately, we can calculate both via the probability of complementary events. Thus, $P(\overline K)$ (the general probability of *not* being sick) is easy to calculate, because we already know $P(K)$ (the general probability of being sick, estimated using prevalence): $P(\overline K) = 100\% - P(K) = `r (1 - prevalence)*100`\%$.
+However, this brings us two new problems: we need $P(T \mid \overline S)$ and $P(\overline S)$. Fortunately, we can calculate both via the probability of complementary events. Thus, $P(\overline S)$ (the general probability of *not* being sick) is easy to calculate, because we already know $P(S)$ (the general probability of being sick, estimated using prevalence): $P(\overline S) = 100\% - P(S) = `r (1 - prevalence)*100`\%$.
 
-Finally, we are still missing $P(T \mid \overline K)$: the probability of having a positive test result when one is actually healthy (a *false positive result*). Here, another quality measure for tests helps us: the *Specificity*, also called *True Negative Rate*. It gives us the probability that a person receives a negative test result when they are actually healthy, so $P(\overline T | \overline K)$. The Specificity is often printed in the package insert of rapid tests, as we have already seen. As we can see in the tree diagram, $P(\overline T | \overline K)$ is complementary to $P(T | \overline K)$ and thus $P(T | \overline K) = 100\% - P(\overline T | \overline K)$.
+Finally, we are still missing $P(T \mid \overline S)$: the probability of having a positive test result when one is actually healthy (a *false positive result*). Here, another quality measure for tests helps us: the *specificity*, also called *true negative rate*. It gives us the probability that a person receives a negative test result when they are actually healthy, so $P(\overline T | \overline S)$. The specificity is often printed in the package insert of rapid tests, as we have already seen. As we can see in the tree diagram, $P(\overline T | \overline S)$ is complementary to $P(T | \overline S)$ and thus $P(T | \overline S) = 100\% - P(\overline T | \overline S)$.
 
 ::: summary
 
@@ -239,30 +239,30 @@ Finally, we are still missing $P(T \mid \overline K)$: the probability of having
 #### Bayes' Theorem {.replace}
 
 \begin{align}
-P(K \mid T) &= \frac{P(T \mid K) P(K)}{P(T)} \\
-            &= \frac{P(T \mid K) P(K)}{P(T \mid K) P(K) + P(T \mid \overline K) P(\overline K)}.
+P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T)} \\
+            &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) P(\overline S)}.
 \end{align}
 
 #### Definition of Conditional Probabilities
 
-$P(\overline T \mid \overline K)$ – Probability that a test shows a negative result, given that the person is actually healthy (Specificity)
+$P(\overline T \mid \overline S)$ – Probability that a test shows a negative result, given that the person is actually healthy (specificity)
 
 :::
 
 ### Calculation
 
-To calculate, for example, how high the probability is that a person is actually sick if they receive a positive test result from our considered rapid test, we note the Sensitivity and Specificity from the package insert again:
+To calculate, for example, how high the probability is that a person is actually sick if they receive a positive test result from our considered rapid test, we note the sensitivity and specificity from the package insert again:
 
-- Sensitivity: $P(T \mid K) = `r sens * 100`\%$
-- Specificity: $P(\overline T \mid \overline K) = `r spec * 100`\%$
+- sensitivity: $P(T \mid S) = `r sens * 100`\%$
+- specificity: $P(\overline T \mid \overline S) = `r spec * 100`\%$
 
-For the Prevalence we had assumed $P(K) = `r prevalence * 100`\%$.
+For the prevalence we had assumed $P(S) = `r prevalence * 100`\%$.
 
 With this, we can plug the values into the formula and get:
 
 \begin{align}
-P(K \mid T) &= \frac{P(T \mid K) P(K)}{P(T \mid K) P(K) + P(T \mid \overline K) P(\overline K)} \\[10pt]
-            &= \frac{P(T \mid K) P(K)}{P(T \mid K) P(K) + (1 - P(\overline T \mid \overline K)) (1 - P(K))} \\[10pt]
+P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) P(\overline S)} \\[10pt]
+            &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + (1 - P(\overline T \mid \overline S)) (1 - P(S))} \\[10pt]
             &= \frac{`r sens` \cdot `r prevalence`}{`r sens` \cdot `r prevalence` + (1 - `r spec`) \cdot (1 - `r prevalence`)} \\[10pt]
             &= `r round(pos_pred_val, 4)`.
 \end{align}
@@ -275,10 +275,9 @@ The probability that a person with a positive rapid test is actually sick (posit
 
 ```{r P_K}
 question_text(
-  "Let's assume that the study that evaluated the rapid test reflects the actual disease rate in the population (i.e., the prevalence). Calculate this prevalence $P(K)$ from the data in the confusion matrix, shown in the summary on the right side.
+  "Let's assume that the study that evaluated the rapid test reflects the actual disease rate in the population (i.e., the prevalence). Calculate this prevalence $P(S)$ from the data in the confusion matrix, shown in the summary on the right side.
 
-Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`
-(Caution, the decimal point is the dot).",
+Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.",
   answer_fn(function(input) {
     expected_result <- 152/617
     allowed_chars <- "0123456789\\.\\+\\*/\\(\\)-^"
@@ -309,11 +308,10 @@ Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`
 
 ```{r P_T}
 question_text(
-  "Calculate the total probability $P(T)$ that a test is positive, regardless of the health status of the tested person. This time, assume a prevalence of $P(K)=0.25$, but use the values of Sensitivity and Specificity from the package insert, i.e., $P(T \\mid K) = 0.914$ and
-$P(\\overline T \\mid \\overline K) = 0.994$.
+  "Calculate the total probability $P(T)$ that a test is positive, regardless of the health status of the tested person. This time, assume a prevalence of $P(S)=0.25$, but use the values of Sensitivity and Specificity from the package insert, i.e., $P(T \\mid S) = 0.914$ and
+$P(\\overline T \\mid \\overline S) = 0.994$.
 
-Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`
-(Caution, the decimal point is the dot).
+Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.
 ",
   answer_fn(function(input) {
     expected_result <- 0.914*0.25+(1-0.994)*(1-0.25)
@@ -345,14 +343,13 @@ Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`
 
 ```{r P_K_T}
 question_text(
-  "Calculate the probability $P(K|T)$ that a person who tested positive is actually sick.
-This time, assume a prevalence of $P(K)=0.25$ as well as a total probability of a positive test
+  "Calculate the probability $P(S \\mid T)$ that a person who tested positive is actually sick.
+This time, assume a prevalence of $P(S)=0.25$ as well as a total probability of a positive test
 of $P(T)=0.233$, but use the values of Sensitivity and Specificity from the package insert, i.e.
-$P(T \\mid K) = 0.914$ and $P(\\overline T \\mid \\overline K) = 0.994$. Compare the result with the
-result generated in the example calculation with a prevalence of $P(K) = 0.2\\%$.
+$P(T \\mid S) = 0.914$ and $P(\\overline T \\mid \\overline S) = 0.994$. Compare the result with the
+result generated in the example calculation with a prevalence of $P(S) = 0.2\\%$.
 
-Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`
-(Caution, the decimal point is the dot).",
+Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.",
   answer_fn(function(input) {
     expected_result <- 0.914*0.25/0.233
     allowed_chars <- "0123456789\\.\\+\\*/\\(\\)-^"
@@ -383,25 +380,24 @@ Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`
 
 ```{r P_nK_nT_ausdruck}
 question("You want to calculate the probability that a person who has a negative rapid test is actually healthy. What is that probability, expressed mathematically?",
-  answer("$P(\\overline T \\mid \\overline K)$"),
-  answer("$P(T \\mid \\overline K)$"),
+  answer("$P(\\overline T \\mid \\overline S)$"),
+  answer("$P(T \\mid \\overline S)$"),
   answer("$P(K \\mid \\overline T)$"),
-  answer("$P(\\overline K \\mid \\overline T)$", correct = TRUE),
-  answer("$P(\\overline K, \\overline T)$"),
-  answer("$P(\\overline T, \\overline K)$"),
+  answer("$P(\\overline S \\mid \\overline T)$", correct = TRUE),
+  answer("$P(\\overline S, \\overline T)$"),
+  answer("$P(\\overline T, \\overline S)$"),
   allow_retry = TRUE
 )
 ```
 
 ```{r P_nK_nT_berechnet}
 question_text(
-  "You want to calculate the probability that a person who has a negative rapid test is actually healthy. Assume a prevalence of $P(K)=0.2\\%$. For the quality of the rapid test, use the values of Sensitivity and Specificity from the package insert, i.e. $P(T \\mid K) = 0.914$ and
-$P(\\overline T \\mid \\overline K) = 0.994$.
+  "You want to calculate the probability that a person who has a negative rapid test is actually healthy. Assume a prevalence of $P(S)=0.2\\%$. For the quality of the rapid test, use the values of sensitivity and specificity from the package insert, i.e. $P(T \\mid S) = 0.914$ and
+$P(\\overline T \\mid \\overline S) = 0.994$.
 
-Hint: Try applying Bayes' theorem for the conditional probability $P(\\overline K \\mid \\overline T)$.
+Hint: Try applying Bayes' theorem for the conditional probability $P(\\overline S \\mid \\overline T)$.
 
-Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`
-(Caution, the decimal point is the dot).",
+Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.",
   answer_fn(function(input) {
     expected_result <- 0.994 * (1-0.002) / (0.994 * (1-0.002) + (1-0.914) * 0.002)
     allowed_chars <- "0123456789\\.\\+\\*/\\(\\)-^"
@@ -503,7 +499,7 @@ grade_this({
 
 #### Programming task 1b
 
-In the following code, the confusion matrix `confmat` is generated with the values from the package insert. Calculate $P(T \mid K) = \frac{P(T, K)}{P(K)}$ directly using `confmat`. You can access the value in row `i` and column `j` by using the syntax `confmat[i, j]`. You can select the entire row `i` using `confmat[i,]` and the entire column `j` using `confmat[,j]`.
+In the following code, the confusion matrix `confmat` is generated with the values from the package insert. Calculate $P(T \mid S) = \frac{P(T, S)}{P(S)}$ directly using `confmat`. You can access the value in row `i` and column `j` by using the syntax `confmat[i, j]`. You can select the entire row `i` using `confmat[i,]` and the entire column `j` using `confmat[,j]`.
 
 ```{r konfmat_r_P_T_K, exercise=TRUE, exercise.timelimit=5}
 confmat <- matrix(c(139, 13, 3, 462), ncol = 2)
@@ -534,22 +530,22 @@ grade_this({
 ```
 
 <div id="konfmat_r_P_T_K-hint">
-Select the corresponding value for $T \cap K$ (positive test *and* sick) from `confmat` using `confmat[i,j]`. Also, calculate the number of people who were proven to be sick as the sum of the "sick" column. You can do this by selecting the column and using the `sum()` function. Then, divide the count for $T \cap K$ by the count for $K$.
+Select the corresponding value for $T \cap S$ (positive test *and* sick) from `confmat` using `confmat[i,j]`. Also, calculate the number of people who were proven to be sick as the sum of the "sick" column. You can do this by selecting the column and using the `sum()` function. Then, divide the count for $T \cap S$ by the count for $S$.
 </div>
 
 ## The Influence of Prevalence and Test Accuracy
 
-Let's take another look at the calculation of the conditional probability $P(K \mid T)$:
+Let's take another look at the calculation of the conditional probability $P(S \mid T)$:
 
 \begin{align}
-P(K \mid T) &= \frac{P(T \mid K) P(K)}{P(T \mid K) P(K) + P(T \mid \overline K) P(\overline K)} \\[10pt]
+P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) P(\overline S)} \\[10pt]
             &= \frac{`r sens` \cdot `r prevalence`}{`r sens` \cdot `r prevalence` + `r 1-spec` \cdot `r 1-prevalence`} \\[10pt]
             &= `r round(pos_pred_val, 4)`.
 \end{align}
 
-This equation clearly shows the significant influence of prevalence on the overall result: Even with a high sensitivity of the test, the numerator $P(T \mid K) P(K)$ and thus the overall result become very small when the prevalence is very low. This also makes intuitive sense: If there are very few cases of a disease overall, the probability that a person is specifically affected by it, even if the test is positive, is comparatively low. In contrast, the probability is very high that a person is affected by a disease with many cases (i.e., high prevalence) regardless of how well the test performs.
+This equation clearly shows the significant influence of prevalence on the overall result: Even with a high sensitivity of the test, the numerator $P(T \mid S) P(S)$ and thus the overall result become very small when the prevalence is very low. This also makes intuitive sense: If there are very few cases of a disease overall, the probability that a person is specifically affected by it, even if the test is positive, is comparatively low. In contrast, the probability is very high that a person is affected by a disease with many cases (i.e., high prevalence) regardless of how well the test performs.
 
-We can also visualize this by plotting $P(K \mid T)$ as a function of prevalence for fixed sensitivity and specificity:
+We can also visualize this by plotting $P(S \mid T)$ as a function of prevalence for fixed sensitivity and specificity:
 
 ```{r}
 calc_ppv <- function(prev, sens, spec) {
@@ -574,21 +570,21 @@ ggplot(ppv_fixed_sens_spec, aes(prev, ppv)) +
     # X-axis in percent
     scale_x_continuous('Prevalence', labels = scales::percent) +
     # Y-axis in percent
-    scale_y_continuous(expression("P" * (K ~ "|" ~ T )), labels = scales::percent) +
-    labs(title = expression("Positive Predictive Value P" * (K ~ "|" ~ T ) ~ "as a Function of Prevalence"),
+    scale_y_continuous(expression("P" * (S ~ "|" ~ T )), labels = scales::percent) +
+    labs(title = expression("Positive Predictive Value P" * (S ~ "|" ~ T ) ~ "as a Function of Prevalence"),
          subtitle = sprintf("With Sensitivity of %.1f%% and Specificity of %.1f%%.", fixed_sens * 100, fixed_spec * 100)) +
     theme_minimal()
 ```
 
-We see how steeply the curve rises, and even with a prevalence of 10%, we can trust a test result with the given sensitivity and specificity. For lower prevalences, this is less justified, as shown here in more detail:
+We see how steeply the curve rises, and even with a prevalence of 10%, we can trust a test result with the given sensitivity and specificity. For a lower prevalence, this is less justified, as shown here in more detail:
 
 ```{r, warning=FALSE}
 # as above, but with X-axis limit
 ggplot(ppv_fixed_sens_spec, aes(prev, ppv)) +
     geom_line() +
     scale_x_continuous('Prevalence', labels = scales::percent, limits = c(0.001, 0.02)) +
-    scale_y_continuous(expression("P" * (K ~ "|" ~ T )), labels = scales::percent) +
-    labs(title = expression("Positive Predictive Value P" * (K ~ "|" ~ T ) ~ "as a Function of Prevalence"),
+    scale_y_continuous(expression("P" * (S ~ "|" ~ T )), labels = scales::percent) +
+    labs(title = expression("Positive Predictive Value P" * (S ~ "|" ~ T ) ~ "as a Function of Prevalence"),
          subtitle = sprintf("With Sensitivity of %.1f%% and Specificity of %.1f%%.", fixed_sens * 100, fixed_spec * 100)) +
     theme_minimal()
 
@@ -603,10 +599,10 @@ ppv_by_param$spec_lbl <- sprintf("%.1f%%", ppv_by_param$spec * 100)
 ggplot(ppv_by_param, aes(prev, ppv, color = spec_lbl, group = spec_lbl)) +
     geom_line() +
     scale_x_continuous('Prevalence', labels = scales::percent, limits = c(0.001, 0.02)) +
-    scale_y_continuous(expression("P" * (K ~ "|" ~ T )), labels = scales::percent) +
+    scale_y_continuous(expression("P" * (S ~ "|" ~ T )), labels = scales::percent) +
     # Consider specificity as discrete values instead of continuous values
     scale_color_discrete("Specificity") +
-    labs(title = expression("Positive Predictive Value P" * (K ~ "|" ~ T )),
+    labs(title = expression("Positive Predictive Value P" * (S ~ "|" ~ T )),
          subtitle = "Depending on prevalence, sensitivity, and specificity.") +
     # For each value of sensitivity, an extra graphic
     facet_wrap(vars(sens), labeller = as_labeller(function(s) {sprintf("Sensitivity %.2f%%", as.numeric(s)*100)})) +
@@ -644,8 +640,8 @@ output$ppv_interactive <- renderPlot({
   ggplot(df, aes(prev, ppv)) +
     geom_line() +
     scale_x_continuous('Prevalence', labels = scales::percent) +
-    scale_y_continuous(expression("P" * (K ~ "|" ~ T )), labels = scales::percent, limits = c(0, 1)) +
-    labs(title = expression("Positive Predictive Value P" * (K ~ "|" ~ T ) ~ "in Relation to Prevalence"),
+    scale_y_continuous(expression("P" * (S ~ "|" ~ T )), labels = scales::percent, limits = c(0, 1)) +
+    labs(title = expression("Positive Predictive Value P" * (S ~ "|" ~ T ) ~ "in Relation to Prevalence"),
          subtitle = sprintf("At Sensitivity of %.1f%% and Specificity of %.1f%%.", input$slider_sens, input$slider_spec)) +
     theme_minimal()
 })
@@ -655,19 +651,19 @@ output$ppv_interactive <- renderPlot({
 question("Why does sensitivity not play such a strong role for the positive predictive value at low prevalence?",
   answer("Because at low prevalence, regardless of the test result, the probability of being sick is very low.", correct = TRUE),
   answer("Because at low prevalence, the sensitivity is automatically lower."),
-  answer("Because at low prevalence, the term $P(T \\mid K) P(K)$ is always very small, so the sensitivity $P(T \\mid K)$ can hardly have an influence on the overall result.", correct = TRUE),
+  answer("Because at low prevalence, the term $P(T \\mid S) P(S)$ is always very small, so the sensitivity $P(T \\mid S)$ can hardly have an influence on the overall result.", correct = TRUE),
   allow_retry = TRUE
 )
 ```
 
-The specificity $P(\overline T \mid \overline K)$ has a great influence, because as we have already shown
+The specificity $P(\overline T \mid \overline S)$ has a great influence, because as we have already shown
 
 \begin{align}
-P(K \mid T) &= \frac{P(T \mid K) P(K)}{P(T \mid K) P(K) + P(T \mid \overline K) P(\overline K)} \\[10pt]
-            &= \frac{P(T \mid K) P(K)}{P(T \mid K) P(K) + (1 - P(\overline T \mid \overline K)) P(\overline K)},
+P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) P(\overline S)} \\[10pt]
+            &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + (1 - P(\overline T \mid \overline S)) P(\overline S)},
 \end{align}
 
-and since $P(K)$ is very small, $P(\overline K)$ is very large and thus the specificity $P(\overline T \mid \overline K)$ has the "power" over the denominator through the term $(1 - P(\overline T \mid \overline K)) P(\overline K)$. Thus, a high specificity causes a small denominator and thus a high positive predictive value.
+and since $P(S)$ is very small, $P(\overline S)$ is very large and thus the specificity $P(\overline T \mid \overline S)$ has the "power" over the denominator through the term $(1 - P(\overline T \mid \overline S)) P(\overline S)$. Thus, a high specificity causes a small denominator and thus a high positive predictive value.
 
 So we see: good tests (especially with high specificity) can make a big difference here especially at the beginning of an outbreak, because they allow infections to be detected quite reliably early on, even if the prevalence is still low.
 
@@ -677,9 +673,9 @@ Other parameters and circumstances aside from prevalence and test quality also h
 
 #### Programming task 2a
 
-Analogous to the graphs for the positive predictive value $P(K \mid T)$, we want to create a graph for the negative predictive value $P(\overline K \mid \overline T)$. This graph should show the negative predictive value as a function of prevalence and sensitivity.
+Analogous to the graphs for the positive predictive value $P(S \mid T)$, we want to create a graph for the negative predictive value $P(\overline S \mid \overline T)$. This graph should show the negative predictive value as a function of prevalence and sensitivity.
 
-First, we need a *Dataframe* with a series of prevalence and sensitivity values. Create such a Dataframe for all combinations of the prevalence values $0.1, 0.2, \dots, 0.9$ and the sensitivity values $0.8, 0.91$ and $0.99$. You can use the function `expand.grid` for this. The Dataframe should be named `npv_param` and have the columns `praev` and `sens`.
+First, we need a *Dataframe* with a series of prevalence and sensitivity values. Create such a dataframe for all combinations of the prevalence values $0.1, 0.2, \dots, 0.9$ and the sensitivity values $0.8, 0.91$ and $0.99$. You can use the function `expand.grid` for this. The Dataframe should be named `npv_param` and have the columns `prev` and `sens`.
 
 ```{r nvw_a, exercise=TRUE, exercise.timelimit=5, exercise.blanks = "___+"}
 npv_param <- expand.grid(prev = ___,
@@ -707,7 +703,7 @@ grade_this({
 
 #### Programming task 2b
 
-Next, calculate the negative predictive value $P(\overline K \mid \overline T)$ for all given parameters and add the result as a column `nvw` to the Dataframe `npv_param`. Use a fixed specificity of $99.4\%$.
+Next, calculate the negative predictive value $P(\overline S \mid \overline T)$ for all given parameters and add the result as a column `nvw` to the Dataframe `npv_param`. Use a fixed specificity of $99.4\%$.
 
 
 ```{r nvw_b-setup}
