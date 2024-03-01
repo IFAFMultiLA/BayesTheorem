@@ -1,5 +1,5 @@
 ---
-title: "How reliable are the results of a Covid test?"
+title: "How reliable are the results of a rapid Covid test?"
 runtime: shiny_prerendered
 author: Markus Konrad, Prof. Dr. Martin Spott
 email: markus.konrad@htw-berlin.de
@@ -31,28 +31,28 @@ pos_pred_val <- sens * prevalence / (sens * prevalence + (1-spec) * (1-prevalenc
 
 ## The problem
 
-A person is feeling sick and decides to take a rapid COVID-19 test. Unfortunately, the test comes back positive.
+A person is feeling sick and decides to take a rapid Covid test. Unfortunately, the test comes back positive.
 
 ![A positive test result](images/covid19test.jpg){height=300px}    
 
-The test is positive, but how certain can the person be that they are truly infected with COVID-19, i.e., how certain can they be that the test result is accurate? The same question could be asked if the test were negative: How certain is it in this case that the person is truly *not* infected with COVID-19?
+The test is positive, but how certain can the person be that they are truly infected with Covid, i.e., how certain can they be that the test result is accurate? The same question could be asked if the test were negative: How certain is it in this case that the person is truly *not* infected with Covid?
 
 ::: summary
 
 #### The problem
 
-What is the probability that a person with a positive COVID-19 test is truly infected? What is the probability that a person with a negative COVID-19 test is truly healthy?
+What is the probability that a person with a positive Covid test is truly infected? What is the probability that a person with a negative Covid test is truly healthy?
 
 :::
 
 First, we take a look at the package insert of the rapid test in the hope of finding answers to our questions.
 
-![The package insert of a commercial Covid-19 rapid test](images/test-performance-clungene2edit.png){height=350px}
+![The package insert of a commercial Covid rapid test](images/test-performance-clungene2edit.png){height=350px}
 
 
 ::: summary
 
-#### Confusion Matrix of the Rapid Test
+#### Confusion matrix of the rapid test
 
 |                 | **Person sick** | **Person healthy** | Total |
 |-----:|:----:|:----:|:----:|
@@ -71,9 +71,9 @@ question_numeric("How many people participated in the study?",
 )
 ```
 
-In this study, we are only interested in the accuracy of the rapid test. To do this, we assume that the result of the RT-PCR test is exact and that we know whether a person is infected with Covid-19 or not. We then check whether the rapid test correctly identifies the health status of the individuals or not. From here on, we will refer to the rapid test simply as *test*.
+In this study, we are only interested in the accuracy of the rapid test. To do this, we assume that the result of the RT-PCR test is exact and that we know whether a person is infected with Covid or not. We then check whether the rapid test correctly identifies the health status of the individuals or not. From here on, we will refer to the Covid rapid test simply as *test*.
 
-When we evaluate the result of such a test, we can first determine that we are dealing with four possibilities:
+When we evaluate the result of such a test, we can first determine that we are dealing with four possible outcomes:
 
 - The person is sick and the test is positive.
 - The person is sick and the test is negative.
@@ -98,14 +98,14 @@ question_numeric("For how many persons in the study did the test provide a corre
 
 Below the confusion matrix in the package insert, we find two percentage values: *PPA* and *NPA*. These were calculated from the values in the table and are quality measures for medical tests:
 
-**PPA** stands for *Positive Percent Agreement* or *True Positive Rate*, or *Sensitivity*. The value indicates how many percent of confirmed positive Covid cases are correctly identified as positive by the test. In our test, it is on average 91.4%.
+**PPA** stands for *positive percent agreement* or *true positive rate*, or *sensitivity*. The value indicates how many percent of confirmed positive Covid cases are correctly identified as positive by the test. In our test, it is on average 91.4%.
 
-**NPA** stands for *Negative Percent Agreement* or *True Negative Rate*, or *Specificity*. The value indicates how many percent of confirmed negative Covid cases are correctly identified as negative by the test. In our test, it is on average 99.4%.
+**NPA** stands for *negative percent agreement* or *true negative rate*, or *specificity*. The value indicates how many percent of confirmed negative Covid cases are correctly identified as negative by the test. In our test, it is on average 99.4%.
 
 ```{r calc_sens}
 question_text("How was the true positive rate, or sensitivity of 91.4% calculated from the confusion matrix in the package insert?",
   answer_fn(function (input) {
-      mark_as(gsub("\\s+", "", input) == "139/152*100")   # Leerzeichen im Text ignorieren
+      mark_as(gsub("\\s+", "", input) == "139/152*100")
   }),
   allow_retry = TRUE,
   trim = TRUE,
@@ -116,7 +116,7 @@ question_text("How was the true positive rate, or sensitivity of 91.4% calculate
 ```{r calc_spec}
 question_text("How is the true negative rate, or specificity of 99.4% calculated from the confusion matrix in the package insert?",
   answer_fn(function (input) {
-      mark_as(gsub("\\s+", "", input) == "462/465*100")   # Leerzeichen im Text ignorieren
+      mark_as(gsub("\\s+", "", input) == "462/465*100")
   }),
   allow_retry = TRUE,
   trim = TRUE,
@@ -126,10 +126,10 @@ question_text("How is the true negative rate, or specificity of 99.4% calculated
 
 ```{r confmat}
 question("Let's assume a computer system can recognize whether a bone is damaged based on an X-ray image. It can recognize three different states: No damage, bruise, bone fracture. Can a confusion matrix also be created for such a system? If so, how many rows and columns would this matrix have?",
-  answer("2 rows und 2 colums"),
-  answer("2 rows und 3 colums"),
-  answer("3 rows und 2 colums"),
-  answer("3 rows und 3 colums", correct = TRUE),
+  answer("2 rows and 2 colums"),
+  answer("2 rows and 3 colums"),
+  answer("3 rows and 2 colums"),
+  answer("3 rows and 3 colums", correct = TRUE),
   answer("It is not possible to create a confusion matrix for such a computer system."),
   allow_retry = TRUE
 )
@@ -143,19 +143,19 @@ To formalize the problem, we represent the procedure in the study as a tree diag
 
 ![Tree diagram with events](images/tree1.png){height=200px}
 
-So that we can calculate well later, we first define two events and their negation. These correspond to the possibilities mentioned above:
+We will first define two events and their negation to help us do the number work. They correspond to the possibilities mentioned above.
 
-- $S$: Person sick
-- $\overline S$: Person healthy
-- $T$: Test positive
-- $\overline T$: Test negative
+- $S$: Person sick,
+- $\overline S$: person healthy,
+- $T$: test positive,
+- $\overline T$: test negative.
 
 ::: summary
 
-#### Definition of the Events
+#### Definition of the events
 
-- $S$: Person sick and $\overline S$: Person healthy
-- $T$: Test positive and $\overline T$: Test negative
+- $S$: Person sick and $\overline S$: person healthy,
+- $T$: test positive and $\overline T$: test negative.
 
 :::
 
@@ -175,7 +175,7 @@ question("What does the probability $P(T \\mid S)$ indicate?",
 )
 ```
 
-$P(T \mid S)$ is called *Sensitivity* and is a quality measure for a test, as we have already seen in the package insert. Sensitivity indicates how high the probability is that the test shows a positive result for a person who is actually sick and is therefore also called *True Positive Rate*.
+$P(T \mid S)$ is called *sensitivity* and is a quality measure for a test, as we have already seen in the package insert. Sensitivity indicates how high the probability is that the test shows a positive result for a person who is actually sick and is therefore also called *true positive rate*.
 
 To calculate the actually sought *positive predictive value*, i.e., the conditional probability $P(S \mid T)$, we can use  **Bayes' Theorem**:
 
@@ -187,9 +187,9 @@ So what we need to calculate $P(S \mid T)$ are three probabilities: $P(S)$, $P(T
 
 ::: summary
 
-#### Definition of Conditional Probabilities
+#### Definition of conditional probabilities
 
-$P(S \mid T)$ – Probability that a person is actually sick, given that the test is positive
+$P(S \mid T)$ – Probability that a person is actually sick, given that the test is positive.
 
 #### Bayes' Theorem
 
@@ -199,19 +199,19 @@ $$
 
 :::
 
-$P(S)$ indicates how high the probability is generally to be infected with Corona at this time – completely independent of a test result. This value is also called *Prevalence.* We can never know this probability exactly, but we can take an estimated value that corresponds to the proportion of currently infected people in Germany. Let's first set $P(S) = `r prevalence * 100`\%$. This is roughly the prevalence during the first wave of Corona in spring 2020 in Germany.
+$P(S)$ indicates how high the probability is generally to be infected with Covid at this time – completely independent of a test result. This value is also called *prevalence.* We can never know this probability exactly, but we can take an estimated value that corresponds to the proportion of currently infected people in Germany. Let's first set $P(S) = `r prevalence * 100`\%$. This is roughly the prevalence during the first wave of Covid in spring 2020 in Germany.
 
-One might also come up with the idea of reading $P(S)$ from the study in the package insert, but this is not sensible in most cases: the study that led to the results in the package insert precisely examines how well the test works in sick people, so that people with proven Covid infection were specifically tested, so that this cannot be spoken of as a cross-section of the population.
+One might also come up with the idea of reading $P(S)$ from the study in the package insert, but this is not sensible in most cases: the study that led to the results in the package insert precisely examines how well the test works in sick people, so that people with proven Covid infection were specifically tested. This cannot be spoken of as a cross-section of the population.
 
 ::: summary
 
-#### Definition of Conditional Probabilities
+#### Definition of conditional probabilities
 
-$P(T \mid S)$ – Probability that a test shows a positive result, given that the person is actually sick (sensitivity)
+$P(T \mid S)$ – Probability that a test shows a positive result, given that the person is actually sick (sensitivity).
 
 :::
 
-The probability $P(T \mid S)$ is already given in the package insert as Sensitivity.
+The probability $P(T \mid S)$ is already given in the package insert as sensitivity.
 
 Finally, we are missing $P(T)$: the probability that a person – whether sick or healthy – receives a positive test result. Here, the *law of total probability* helps us, which allows us to add the probabilities for the two possibilities that lead to positive tests (person sick and person healthy), since they exclude each other:
 
@@ -243,18 +243,18 @@ P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T)} \\
             &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) P(\overline S)}.
 \end{align}
 
-#### Definition of Conditional Probabilities
+#### Definition of conditional probabilities
 
-$P(\overline T \mid \overline S)$ – Probability that a test shows a negative result, given that the person is actually healthy (specificity)
+$P(\overline T \mid \overline S)$ – Probability that a test shows a negative result, given that the person is actually healthy (specificity).
 
 :::
 
 ### Calculation
 
-To calculate, for example, how high the probability is that a person is actually sick if they receive a positive test result from our considered rapid test, we note the sensitivity and specificity from the package insert again:
+To calculate how high the probability is that a person is actually sick if they receive a positive test result from our considered rapid test, we note the sensitivity and specificity from the package insert again:
 
-- sensitivity: $P(T \mid S) = `r sens * 100`\%$
-- specificity: $P(\overline T \mid \overline S) = `r spec * 100`\%$
+- Sensitivity: $P(T \mid S) = `r sens * 100`\%$,
+- and specificity: $P(\overline T \mid \overline S) = `r spec * 100`\%$.
 
 For the prevalence we had assumed $P(S) = `r prevalence * 100`\%$.
 
@@ -269,7 +269,7 @@ P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) 
 
 ### Interpretation
 
-The probability that a person with a positive rapid test is actually sick (positive predictive value) is only about $`r round(pos_pred_val * 100)`\%$. This is actually not a particularly high probability and at first glance surprising, because both Sensitivity and Specificity are close to 100% as quality measures in the package insert of the test. On the next page, we will take a closer look at why this is the case.
+The probability that a person with a positive rapid test is actually sick (positive predictive value) is only about $`r round(pos_pred_val * 100)`\%$. This is actually not a particularly high probability and at first glance surprising, because both sensitivity and specificity are close to 100% as quality measures in the package insert of the test. On the next page, we will take a closer look at why this is the case.
 
 ### Quiz tasks
 
@@ -308,7 +308,7 @@ Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.
 
 ```{r P_T}
 question_text(
-  "Calculate the total probability $P(T)$ that a test is positive, regardless of the health status of the tested person. This time, assume a prevalence of $P(S)=0.25$, but use the values of Sensitivity and Specificity from the package insert, i.e., $P(T \\mid S) = 0.914$ and
+  "Calculate the total probability $P(T)$ that a test is positive, regardless of the health status of the tested person. This time, assume a prevalence of $P(S)=0.25$, but use the values of sensitivity and specificity from the package insert, i.e., $P(T \\mid S) = 0.914$ and
 $P(\\overline T \\mid \\overline S) = 0.994$.
 
 Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.
@@ -345,7 +345,7 @@ Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.
 question_text(
   "Calculate the probability $P(S \\mid T)$ that a person who tested positive is actually sick.
 This time, assume a prevalence of $P(S)=0.25$ as well as a total probability of a positive test
-of $P(T)=0.233$, but use the values of Sensitivity and Specificity from the package insert, i.e.
+of $P(T)=0.233$, but use the values of sensitivity and specificity from the package insert, i.e.
 $P(T \\mid S) = 0.914$ and $P(\\overline T \\mid \\overline S) = 0.994$. Compare the result with the
 result generated in the example calculation with a prevalence of $P(S) = 0.2\\%$.
 
@@ -429,9 +429,9 @@ Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.
 
 ---
 
-#### Introduction to Code Tasks
+#### Introduction to code tasks
 
-In this learning application, you will also be given tasks to solve using R code. These tasks involve short code snippets that you should either complete (by replacing placeholders with corresponding code) or write entirely on your own. In most cases, you will generate a final result, **which must be in the last line.**
+In this learning application, you will also be given tasks to solve using R code. These tasks involve short code snippets that you should either complete (by replacing placeholders with corresponding code) or write entirely on your own. In most cases, you will generate a final result, **which must be the outcome of the last line.**
 
 **Example task:** Determine the mean value of the numbers on a six-sided die. In the code, we have already provided the numbers 1 to 6 in the variable `die`. Now use an appropriate R function to determine the mean value from these numbers. Replace the placeholder `___` for this purpose.
 
@@ -448,11 +448,10 @@ mean(die)
 ```{r code_intro1-check}
 grade_this({
     die <- 1:6
-    # Prüfen d. Ergebnisses
     if (.result == mean(die)) {
         pass()
     }
-    fail()  # falls nicht korrekt
+    fail()
 })
 ```
 
@@ -460,9 +459,9 @@ grade_this({
 You can calculate the arithmetic mean in R using the function `mean()`.
 </div>
 
-As you can see, you need to write the final result in the last line of the code input.
+As you can see, you need to write the code that produces the final result in the last line of the code input.
 
-#### Programming task 1a
+#### Code task 1a
 
 In the following code, the confusion matrix `confmat` is generated with the values from the package insert.
 
@@ -497,7 +496,7 @@ grade_this({
 })
 ```
 
-#### Programming task 1b
+#### Code task 1b
 
 In the following code, the confusion matrix `confmat` is generated with the values from the package insert. Calculate $P(T \mid S) = \frac{P(T, S)}{P(S)}$ directly using `confmat`. You can access the value in row `i` and column `j` by using the syntax `confmat[i, j]`. You can select the entire row `i` using `confmat[i,]` and the entire column `j` using `confmat[,j]`.
 
@@ -521,11 +520,10 @@ grade_this({
     colnames(confmat) <- c("sick", "healthy")
     rownames(confmat) <- c("positive", "negative")
     
-    # Prüfen d. Ergebnisses
     if (identical(.result, confmat[1, 1] / sum(confmat[,1]))) {
         pass()
     }
-    fail()  # falls nicht korrekt
+    fail()
 })
 ```
 
@@ -533,7 +531,7 @@ grade_this({
 Select the corresponding value for $T \cap S$ (positive test *and* sick) from `confmat` using `confmat[i,j]`. Also, calculate the number of people who were proven to be sick as the sum of the "sick" column. You can do this by selecting the column and using the `sum()` function. Then, divide the count for $T \cap S$ by the count for $S$.
 </div>
 
-## The Influence of Prevalence and Test Accuracy
+## The influence of prevalence and test accuracy
 
 Let's take another look at the calculation of the conditional probability $P(S \mid T)$:
 
@@ -543,7 +541,7 @@ P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) 
             &= `r round(pos_pred_val, 4)`.
 \end{align}
 
-This equation clearly shows the significant influence of prevalence on the overall result: Even with a high sensitivity of the test, the numerator $P(T \mid S) P(S)$ and thus the overall result become very small when the prevalence is very low. This also makes intuitive sense: If there are very few cases of a disease overall, the probability that a person is specifically affected by it, even if the test is positive, is comparatively low. In contrast, the probability is very high that a person is affected by a disease with many cases (i.e., high prevalence) regardless of how well the test performs.
+This equation clearly shows the significant influence of prevalence on the overall result: Even with a high sensitivity of the test, the numerator $P(T \mid S) P(S)$ and thus the overall result become very small when the prevalence is very low. This also makes intuitive sense: If there are very few cases of a disease overall, the probability that a person is actually affected by it, even if the test is positive, is comparatively low. In contrast, the probability is very high that a person is affected by a disease with many cases (i.e., high prevalence) regardless of how well the test performs.
 
 We can also visualize this by plotting $P(S \mid T)$ as a function of prevalence for fixed sensitivity and specificity:
 
@@ -571,12 +569,12 @@ ggplot(ppv_fixed_sens_spec, aes(prev, ppv)) +
     scale_x_continuous('Prevalence', labels = scales::percent) +
     # Y-axis in percent
     scale_y_continuous(expression("P" * (S ~ "|" ~ T )), labels = scales::percent) +
-    labs(title = expression("Positive Predictive Value P" * (S ~ "|" ~ T ) ~ "as a Function of Prevalence"),
-         subtitle = sprintf("With Sensitivity of %.1f%% and Specificity of %.1f%%.", fixed_sens * 100, fixed_spec * 100)) +
+    labs(title = expression("Positive predictive value P" * (S ~ "|" ~ T ) ~ "as a function of prevalence"),
+         subtitle = sprintf("With sensitivity of %.1f%% and specificity of %.1f%%.", fixed_sens * 100, fixed_spec * 100)) +
     theme_minimal()
 ```
 
-We see how steeply the curve rises, and even with a prevalence of 10%, we can trust a test result with the given sensitivity and specificity. For a lower prevalence, this is less justified, as shown here in more detail:
+We see how steeply the curve rises, and starting at a prevalence of 10%, we can really trust a test result with the given sensitivity and specificity. For a lower prevalence, this is less justified, as shown here in more detail:
 
 ```{r, warning=FALSE}
 # as above, but with X-axis limit
@@ -584,8 +582,8 @@ ggplot(ppv_fixed_sens_spec, aes(prev, ppv)) +
     geom_line() +
     scale_x_continuous('Prevalence', labels = scales::percent, limits = c(0.001, 0.02)) +
     scale_y_continuous(expression("P" * (S ~ "|" ~ T )), labels = scales::percent) +
-    labs(title = expression("Positive Predictive Value P" * (S ~ "|" ~ T ) ~ "as a Function of Prevalence"),
-         subtitle = sprintf("With Sensitivity of %.1f%% and Specificity of %.1f%%.", fixed_sens * 100, fixed_spec * 100)) +
+    labs(title = expression("Positive predictive value P" * (S ~ "|" ~ T ) ~ "as a function of prevalence"),
+         subtitle = sprintf("With sensitivity of %.1f%% and specificity of %.1f%%.", fixed_sens * 100, fixed_spec * 100)) +
     theme_minimal()
 
 ```
@@ -602,7 +600,7 @@ ggplot(ppv_by_param, aes(prev, ppv, color = spec_lbl, group = spec_lbl)) +
     scale_y_continuous(expression("P" * (S ~ "|" ~ T )), labels = scales::percent) +
     # Consider specificity as discrete values instead of continuous values
     scale_color_discrete("Specificity") +
-    labs(title = expression("Positive Predictive Value P" * (S ~ "|" ~ T )),
+    labs(title = expression("Positive predictive value P" * (S ~ "|" ~ T )),
          subtitle = "Depending on prevalence, sensitivity, and specificity.") +
     # For each value of sensitivity, an extra graphic
     facet_wrap(vars(sens), labeller = as_labeller(function(s) {sprintf("Sensitivity %.2f%%", as.numeric(s)*100)})) +
@@ -616,11 +614,11 @@ By using this interactive graphic, you can illustrate the positive predictive va
 fluidRow(
     column(8, plotOutput("ppv_interactive")),   # Plot Output
     column(4,
-           sliderInput("slider_sens", "Sensitivity in Percent",
+           sliderInput("slider_sens", "Sensitivity in percent",
                        min = 0, max = 100, value = 95, step = 0.1),
-           sliderInput("slider_spec", "Specificity in Percent",
+           sliderInput("slider_spec", "Specificity in percent",
                        min = 0, max = 100, value = 95, step = 0.1),
-           sliderInput("slider_prev_max", "Maximum Displayed Prevalence in Percent (X-Axis)",
+           sliderInput("slider_prev_max", "Maximum displayed prevalence in percent (x-axis)",
                        min = 0, max = 100, value = 2, step = 0.1)
     )
 )
@@ -641,8 +639,8 @@ output$ppv_interactive <- renderPlot({
     geom_line() +
     scale_x_continuous('Prevalence', labels = scales::percent) +
     scale_y_continuous(expression("P" * (S ~ "|" ~ T )), labels = scales::percent, limits = c(0, 1)) +
-    labs(title = expression("Positive Predictive Value P" * (S ~ "|" ~ T ) ~ "in Relation to Prevalence"),
-         subtitle = sprintf("At Sensitivity of %.1f%% and Specificity of %.1f%%.", input$slider_sens, input$slider_spec)) +
+    labs(title = expression("Positive predictive value P" * (S ~ "|" ~ T ) ~ "in relation to prevalence"),
+         subtitle = sprintf("At sensitivity of %.1f%% and specificity of %.1f%%.", input$slider_sens, input$slider_spec)) +
     theme_minimal()
 })
 ```
@@ -663,19 +661,19 @@ P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + P(T \mid \overline S) 
             &= \frac{P(T \mid S) P(S)}{P(T \mid S) P(S) + (1 - P(\overline T \mid \overline S)) P(\overline S)},
 \end{align}
 
-and since $P(S)$ is very small, $P(\overline S)$ is very large and thus the specificity $P(\overline T \mid \overline S)$ has the "power" over the denominator through the term $(1 - P(\overline T \mid \overline S)) P(\overline S)$. Thus, a high specificity causes a small denominator and thus a high positive predictive value.
+and since $P(S)$ is very small, $P(\overline S)$ is very large and thus the specificity $P(\overline T \mid \overline S)$ has the "power" over the denominator through the term $(1 - P(\overline T \mid \overline S)) P(\overline S)$. Thus, a high specificity causes a small denominator and therefore a high positive predictive value.
 
-So we see: good tests (especially with high specificity) can make a big difference here especially at the beginning of an outbreak, because they allow infections to be detected quite reliably early on, even if the prevalence is still low.
+So we see: good tests (notably with high specificity) can make a big difference here especially at the beginning of an outbreak. They allow infections to be detected quite reliably early on, even if the prevalence is still low.
 
 Other parameters and circumstances aside from prevalence and test quality also have a significant influence on the result. In particular, it is important how thoroughly the swab was taken. It is also known that temperature affects the accuracy of Covid rapid tests. So you see that the calculations can become much more complex!
 
 ---
 
-#### Programming task 2a
+#### Code task 2a
 
 Analogous to the graphs for the positive predictive value $P(S \mid T)$, we want to create a graph for the negative predictive value $P(\overline S \mid \overline T)$. This graph should show the negative predictive value as a function of prevalence and sensitivity.
 
-First, we need a *Dataframe* with a series of prevalence and sensitivity values. Create such a dataframe for all combinations of the prevalence values $0.1, 0.2, \dots, 0.9$ and the sensitivity values $0.8, 0.91$ and $0.99$. You can use the function `expand.grid` for this. The Dataframe should be named `npv_param` and have the columns `prev` and `sens`.
+First, we need a *dataframe* with a series of prevalence and sensitivity values. Create such a dataframe for all combinations of the prevalence values $0.1, 0.2, \dots, 0.9$ and the sensitivity values $0.8, 0.91$ and $0.99$. You can use the function `expand.grid` for this. The dataframe should be named `npv_param` and have the columns `prev` and `sens`.
 
 ```{r nvw_a, exercise=TRUE, exercise.timelimit=5, exercise.blanks = "___+"}
 npv_param <- expand.grid(prev = ___,
@@ -701,9 +699,9 @@ grade_this({
 })
 ```
 
-#### Programming task 2b
+#### Code task 2b
 
-Next, calculate the negative predictive value $P(\overline S \mid \overline T)$ for all given parameters and add the result as a column `nvw` to the Dataframe `npv_param`. Use a fixed specificity of $99.4\%$.
+Next, calculate the negative predictive value $P(\overline S \mid \overline T)$ for all given parameters and add the result as a column `nvw` to the dataframe `npv_param`. Use a fixed specificity of $99.4\%$.
 
 
 ```{r nvw_b-setup}
@@ -738,7 +736,7 @@ grade_this({
 })
 ```
 
-#### Programming task 2c
+#### Code task 2c
 
 Create a plot with *ggplot2* that displays the negative predictive value as a function of prevalence. For the three different sensitivity values, three differently colored lines should be displayed.
 
@@ -781,7 +779,7 @@ The recorded data includes the following information:
     <li class="trackingdata-chapters">Information about page changes</li>
     <li>Information when filling out quizzes (given answers, results)</li>
     <li>Information when filling out code tasks (entered code, result, success)</li>
-    <li class="trackingdata-inputs">Changes to controls (for interactive graphics, etc.)</li>
+    <li class="trackingdata-inputs">Changes to user input controls (for interactive graphics, etc.)</li>
     <li class="trackingdata-mouse">Mouse movements</li>
     <li class="trackingdata-mouse">Scroll movements</li>
     <li class="trackingdata-mouse">Clicks</li>
@@ -791,7 +789,7 @@ All this data is recorded only within the learning application. It is stored on 
 
 Furthermore, this data will serve as the basis for researching and analyzing learning behavior and will thus be incorporated into possible scientific publications.
 
-**This procedure is solely for scientific research. It does not at any time draw conclusions about the respective person and thus has no effect on study achievements.**
+**This procedure is solely for scientific research. It cannot at any time draw conclusions about the respective person and thus has no effect on study achievements.**
 
 If you refuse consent for the recording of data for research purposes, only cookies for storing user preferences and the already processed state of the learning application will be stored in your browser. By continuing to use the website, you agree to this purpose.
 
