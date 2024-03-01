@@ -714,7 +714,7 @@
     },
     "learnrextra": {
       "Package": "learnrextra",
-      "Version": "0.7.0",
+      "Version": "0.7.1",
       "Source": "Local",
       "RemoteType": "local",
       "RemoteUrl": "../../learnrextra",
@@ -726,7 +726,7 @@
         "learnr",
         "shiny"
       ],
-      "Hash": "074abf7f001f6afb72115c201cc52894"
+      "Hash": "17ca993d3dd6db22472793f4c3f1786a"
     },
     "lifecycle": {
       "Package": "lifecycle",
