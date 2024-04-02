@@ -4,7 +4,9 @@ Markus Konrad <markus.konrad@htw-berlin.de>, March 2024
 
 ## Basic information
 
-This learning application uses [learnrextra](https://github.com/IFAFMultiLA/learnrextra).
+The application is hosted online at [rshiny.f4.htw-berlin.de/BayesTheorem/](https://rshiny.f4.htw-berlin.de/BayesTheorem/).
+
+This learning application uses the package [learnrextra](https://github.com/IFAFMultiLA/learnrextra).
 
 ## Installation
 
