@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.3.2",
+    "Version": "4.3.3",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -714,7 +714,7 @@
     },
     "learnrextra": {
       "Package": "learnrextra",
-      "Version": "0.7.1",
+      "Version": "0.8.2",
       "Source": "Local",
       "RemoteType": "local",
       "RemoteUrl": "../../learnrextra",
@@ -726,7 +726,7 @@
         "learnr",
         "shiny"
       ],
-      "Hash": "17ca993d3dd6db22472793f4c3f1786a"
+      "Hash": "8408afdfd00259b0cdda8dd64292d76b"
     },
     "lifecycle": {
       "Package": "lifecycle",
