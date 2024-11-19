@@ -33,33 +33,28 @@ pos_pred_val <- sens * prevalence / (sens * prevalence + (1-spec) * (1-prevalenc
 
 A person is feeling sick and decides to take a rapid Covid test. Unfortunately, the test comes back positive.
 
-![A positive test result](images/covid19test.jpg){height=300px}    
+![A positive test result](images/covid19test.jpg){height="300px"}
 
 The test is positive, but how certain can the person be that they are truly infected with Covid, i.e., how certain can they be that the test result is accurate? The same question could be asked if the test were negative: How certain is it in this case that the person is truly *not* infected with Covid?
 
 ::: summary
-
 #### The problem
 
 What is the probability that a person with a positive Covid test is truly infected? What is the probability that a person with a negative Covid test is truly healthy?
-
 :::
 
 First, we take a look at the package insert of the rapid test in the hope of finding answers to our questions.
 
-![The package insert of a commercial Covid rapid test](images/test-performance-clungene2edit.png){height=350px}
-
+![The package insert of a commercial Covid rapid test](images/test-performance-clungene2edit.png){height="350px"}
 
 ::: summary
-
 #### Confusion matrix of the rapid test
 
-|                 | **Person sick** | **Person healthy** | Total |
-|-----:|:----:|:----:|:----:|
-|  Test positive  |   139            |  3                | 142    |
-|  Test negative  |   13             |  462              | 475    |
-|  Total          |   152            |  465              | 617    |
-
+|               | **Person sick** | **Person healthy** | Total |
+|--------------:|:---------------:|:------------------:|:-----:|
+| Test positive |       139       |         3          |  142  |
+| Test negative |       13        |        462         |  475  |
+|         Total |       152       |        465         |  617  |
 :::
 
 Let's try to decipher the information. Apparently, a study was conducted in which samples were taken from individuals. These samples were subjected to an RT-PCR test and a rapid test of the CLUNGENE brand via nasal swab, and the results of both tests were compared for each person.
@@ -75,17 +70,17 @@ In this study, we are only interested in the accuracy of the rapid test. To do t
 
 When we evaluate the result of such a test, we can first determine that we are dealing with four possible outcomes:
 
-- The person is sick and the test is positive.
-- The person is sick and the test is negative.
-- The person is healthy and the test is positive.
-- The person is healthy and the test is negative.
+-   The person is sick and the test is positive.
+-   The person is sick and the test is negative.
+-   The person is healthy and the test is positive.
+-   The person is healthy and the test is negative.
 
 This can be presented as a table:
 
-|  | **Person sick** | **Person healthy** |
-|-----:|:----:|:----:|
-|  Test positive   |   true positive   |  false positive    |
-|  Test negative   |   false negative   |  true negative   |
+|               | **Person sick** | **Person healthy** |
+|--------------:|:---------------:|:------------------:|
+| Test positive |  true positive  |   false positive   |
+| Test negative | false negative  |   true negative    |
 
 This table representation is called a *confusion matrix*.
 
@@ -141,27 +136,25 @@ Why do test accuracy, sensitivity, and specificity not answer our actual questio
 
 To formalize the problem, we represent the procedure in the study as a tree diagram, which will later help us answer the actual question. We know who is healthy and who is sick and check for each group of people how the test turns out:
 
-![Tree diagram with events](images/tree1.png){height=200px}
+![Tree diagram with events](images/tree1.png){height="200px"}
 
 We will first define two events and their negation to help us do the number work. They correspond to the possibilities mentioned above.
 
-- $S$: Person sick,
-- $\overline S$: person healthy,
-- $T$: test positive,
-- $\overline T$: test negative.
+-   $S$: Person sick,
+-   $\overline S$: person healthy,
+-   $T$: test positive,
+-   $\overline T$: test negative.
 
 ::: summary
-
 #### Definition of the events
 
-- $S$: Person sick and $\overline S$: person healthy,
-- $T$: test positive and $\overline T$: test negative.
-
+-   $S$: Person sick and $\overline S$: person healthy,
+-   $T$: test positive and $\overline T$: test negative.
 :::
 
 We can transfer these events to a tree diagram, together with the associated probabilities $P$:
 
-![Tree diagram with events and their probabilities](images/tree2.png){height=300px}
+![Tree diagram with events and their probabilities](images/tree2.png){height="300px"}
 
 As formulated in the question, we want to know the probability that a person is actually sick if the test is positive. This can be formulated using the above-defined events as *conditional probability* – the probability that a person is sick, given that the test is positive: $P(S \mid T)$. This probability is also called *positive predictive value*, but it does not appear in the above tree diagram. There, the events $S$ and $T$ are reversed as in $P(T \mid S)$.
 
@@ -177,7 +170,7 @@ question("What does the probability $P(T \\mid S)$ indicate?",
 
 $P(T \mid S)$ is called *sensitivity* and is a quality measure for a test, as we have already seen in the package insert. Sensitivity indicates how high the probability is that the test shows a positive result for a person who is actually sick and is therefore also called *true positive rate*.
 
-To calculate the actually sought *positive predictive value*, i.e., the conditional probability $P(S \mid T)$, we can use  **Bayes' Theorem**:
+To calculate the actually sought *positive predictive value*, i.e., the conditional probability $P(S \mid T)$, we can use **Bayes' Theorem**:
 
 $$
 P(S \mid T) = \frac{P(T \mid S) P(S)}{P(T)}.
@@ -186,7 +179,6 @@ $$
 So what we need to calculate $P(S \mid T)$ are three probabilities: $P(S)$, $P(T \mid S)$, and $P(T)$.
 
 ::: summary
-
 #### Definition of conditional probabilities
 
 $P(S \mid T)$ – Probability that a person is actually sick, given that the test is positive.
@@ -196,7 +188,6 @@ $P(S \mid T)$ – Probability that a person is actually sick, given that the tes
 $$
 P(S \mid T) = \frac{P(T \mid S) P(S)}{P(T)}.
 $$
-
 :::
 
 $P(S)$ indicates how high the probability is generally to be infected with Covid at this time – completely independent of a test result. This value is also called *prevalence.* We can never know this probability exactly, but we can take an estimated value that corresponds to the proportion of currently infected people in Germany. Let's first set $P(S) = `r prevalence * 100`\%$. This is roughly the prevalence during the first wave of Covid in spring 2020 in Germany.
@@ -204,18 +195,16 @@ $P(S)$ indicates how high the probability is generally to be infected with Covid
 One might also come up with the idea of reading $P(S)$ from the study in the package insert, but this is not sensible in most cases: the study that led to the results in the package insert precisely examines how well the test works in sick people, so that people with proven Covid infection were specifically tested. This cannot be spoken of as a cross-section of the population.
 
 ::: summary
-
 #### Definition of conditional probabilities
 
 $P(T \mid S)$ – Probability that a test shows a positive result, given that the person is actually sick (sensitivity).
-
 :::
 
 The probability $P(T \mid S)$ is already given in the package insert as sensitivity.
 
 Finally, we are missing $P(T)$: the probability that a person – whether sick or healthy – receives a positive test result. Here, the *law of total probability* helps us, which allows us to add the probabilities for the two possibilities that lead to positive tests (person sick and person healthy), since they exclude each other:
 
-![Tree diagram with both possibilities that lead to positive tests](images/tree3.png){height=300px}
+![Tree diagram with both possibilities that lead to positive tests](images/tree3.png){height="300px"}
 
 Thus, we get
 
@@ -234,8 +223,6 @@ However, this brings us two new problems: we need $P(T \mid \overline S)$ and $P
 Finally, we are still missing $P(T \mid \overline S)$: the probability of having a positive test result when one is actually healthy (a *false positive result*). Here, another quality measure for tests helps us: the *specificity*, also called *true negative rate*. It gives us the probability that a person receives a negative test result when they are actually healthy, so $P(\overline T | \overline S)$. The specificity is often printed in the package insert of rapid tests, as we have already seen. As we can see in the tree diagram, $P(\overline T | \overline S)$ is complementary to $P(T | \overline S)$ and thus $P(T | \overline S) = 100\% - P(\overline T | \overline S)$.
 
 ::: summary
-
-
 #### Bayes' Theorem {.replace}
 
 \begin{align}
@@ -246,15 +233,14 @@ P(S \mid T) &= \frac{P(T \mid S) P(S)}{P(T)} \\
 #### Definition of conditional probabilities
 
 $P(\overline T \mid \overline S)$ – Probability that a test shows a negative result, given that the person is actually healthy (specificity).
-
 :::
 
 ### Calculation
 
 To calculate how high the probability is that a person is actually sick if they receive a positive test result from our considered rapid test, we note the sensitivity and specificity from the package insert again:
 
-- Sensitivity: $P(T \mid S) = `r sens * 100`\%$,
-- and specificity: $P(\overline T \mid \overline S) = `r spec * 100`\%$.
+-   Sensitivity: $P(T \mid S) = `r sens * 100`\%$,
+-   and specificity: $P(\overline T \mid \overline S) = `r spec * 100`\%$.
 
 For the prevalence we had assumed $P(S) = `r prevalence * 100`\%$.
 
@@ -427,7 +413,7 @@ Enter either a mathematical expression like `(20+11)/10` or a number like `3.1`.
 
 ```
 
----
+------------------------------------------------------------------------
 
 #### Introduction to code tasks
 
@@ -455,9 +441,9 @@ grade_this({
 })
 ```
 
-<div id="code_intro1-hint">
+::: {#code_intro1-hint}
 You can calculate the arithmetic mean in R using the function `mean()`.
-</div>
+:::
 
 As you can see, you need to write the code that produces the final result in the last line of the code input.
 
@@ -527,9 +513,9 @@ grade_this({
 })
 ```
 
-<div id="konfmat_r_P_T_K-hint">
+::: {#konfmat_r_P_T_K-hint}
 Select the corresponding value for $T \cap S$ (positive test *and* sick) from `confmat` using `confmat[i,j]`. Also, calculate the number of people who were proven to be sick as the sum of the "sick" column. You can do this by selecting the column and using the `sum()` function. Then, divide the count for $T \cap S$ by the count for $S$.
-</div>
+:::
 
 ## The influence of prevalence and test accuracy
 
@@ -667,7 +653,7 @@ So we see: good tests (notably with high specificity) can make a big difference 
 
 Other parameters and circumstances aside from prevalence and test quality also have a significant influence on the result. In particular, it is important how thoroughly the swab was taken. It is also known that temperature affects the accuracy of Covid rapid tests. So you see that the calculations can become much more complex!
 
----
+------------------------------------------------------------------------
 
 #### Code task 2a
 
@@ -702,7 +688,6 @@ grade_this({
 #### Code task 2b
 
 Next, calculate the negative predictive value $P(\overline S \mid \overline T)$ for all given parameters and add the result as a column `nvw` to the dataframe `npv_param`. Use a fixed specificity of $99.4\%$.
-
 
 ```{r nvw_b-setup}
 npv_param <- expand.grid(prev = seq(0.1, 0.9, length.out = 9),
@@ -742,7 +727,7 @@ Create a plot with *ggplot2* that displays the negative predictive value as a fu
 
 The resulting plot should look like this:
 
-![](images/task_2c_plot.png){width=400px}
+![](images/task_2c_plot.png){width="400px"}
 
 ```{r nvw_c-setup, exercise.setup="nvw_b-setup"}
 spec <- 0.994
@@ -766,7 +751,6 @@ grade_this_code()
 ```
 
 ::: tracking_consent_text
-
 ### Declaration of Consent
 
 The project "Multimodal Interactive Learning Dashboards with Learning Analytics" (MultiLA) aims to research learning behavior in the provided learning applications. Upon the first visit to this website, a random user ID is generated. Data is collected in the background for this user ID, which significantly contributes to capturing user behavior in a pseudonymized manner and subsequently analyzing it in relation to learning behavior. The user ID is stored as a browser cookie, so that information about the existing user ID can be added during a subsequent visit. The storage of cookies also helps to save the already processed state of the learning application and to recognize and retrieve the user's progress.
@@ -774,15 +758,53 @@ The project "Multimodal Interactive Learning Dashboards with Learning Analytics"
 The recorded data includes the following information:
 
 <ul>
-    <li>Browser information (browser software, window size)</li>
-    <li>Start and end time of website usage</li>
-    <li class="trackingdata-chapters">Information about page changes</li>
-    <li>Information when filling out quizzes (given answers, results)</li>
-    <li>Information when filling out code tasks (entered code, result, success)</li>
-    <li class="trackingdata-inputs">Changes to user input controls (for interactive graphics, etc.)</li>
-    <li class="trackingdata-mouse">Mouse movements</li>
-    <li class="trackingdata-mouse">Scroll movements</li>
-    <li class="trackingdata-mouse">Clicks</li>
+
+<li>Browser information (browser software, window size)</li>
+
+<li>Start and end time of website usage</li>
+
+<li class="trackingdata-chapters">
+
+Information about page changes
+
+</li>
+
+<li>Information when filling out quizzes (given answers, results)</li>
+
+<li>Information when filling out code tasks (entered code, result, success)</li>
+
+<li class="trackingdata-inputs">
+
+Changes to user input controls (for interactive graphics, etc.)
+
+</li>
+
+<li class="trackingdata-mouse">
+
+Mouse movements
+
+</li>
+
+<li class="trackingdata-mouse">
+
+Scroll movements
+
+</li>
+
+<li class="trackingdata-mouse">
+
+Clicks
+
+</li>
+
+</li>
+
+<li class="trackingdata-chatbot">
+
+Chatbot communication
+
+</li>
+
 </ul>
 
 All this data is recorded only within the learning application. It is stored on the servers of HTW Berlin and will be deleted with the expiration of the project or possible follow-up projects.
@@ -794,11 +816,9 @@ Furthermore, this data will serve as the basis for researching and analyzing lea
 If you refuse consent for the recording of data for research purposes, only cookies for storing user preferences and the already processed state of the learning application will be stored in your browser. By continuing to use the website, you agree to this purpose.
 
 For further information, please refer to the <a href="#" onclick="showDataProtectionModal(true)">data protection information</a>.
-
 :::
 
 ::: data_protection_text
-
 ### Data Protection Information
 
 #### Data Protection Information on Data Collection in the Research Project "MultiLA" according to Art. 13 GDPR
@@ -807,25 +827,23 @@ The project "Multimodal Interactive Learning Dashboards with Learning Analytics"
 
 ##### 1. Name and contact details of the responsible party
 
-Hochschule für Technik und Wirtschaft Berlin  
-Treskowallee 8  
+Hochschule für Technik und Wirtschaft Berlin\
+Treskowallee 8\
 10318 Berlin
 
 T: +49.40.42875-0
 
-Represented by the [President](https://www.htw-berlin.de/einrichtungen/hochschulleitung/praesidentin/)
-Praesidentin@HTW-Berlin.de
-
+Represented by the [President](https://www.htw-berlin.de/einrichtungen/hochschulleitung/praesidentin/) [Praesidentin\@HTW-Berlin.de](mailto:Praesidentin@HTW-Berlin.de){.email}
 
 ##### 2. Data Protection Officer
 
-Official Data Protection Officer  
-Vitali Dick (HiSolutions AG)  
-datenschutz@htw-berlin.de
+Official Data Protection Officer\
+Vitali Dick (HiSolutions AG)\
+[datenschutz\@htw-berlin.de](mailto:datenschutz@htw-berlin.de){.email}
 
-Project Manager  
-Andre Beinrucker  
-andre.beinrucker@htw-berlin.de
+Project Manager\
+Andre Beinrucker\
+[andre.beinrucker\@htw-berlin.de](mailto:andre.beinrucker@htw-berlin.de){.email}
 
 ##### 3. Processing of personal data
 
@@ -843,14 +861,9 @@ All data is recorded only within the learning application. It is stored on the s
 
 ##### 4. Your rights
 
-You have the right to request information from the university about the data stored about you and/or to have incorrect data corrected.
-You also have the right to deletion or to restrict processing or to object to processing.
-In addition, you have the right, in the event that you have given consent as the legal basis for processing, to revoke your consent at any time. The legality of the processing carried out on the basis of the consent until the revocation is not affected by this. In this case, please contact the following person: Andre Beinrucker, andre.beinrucker@htw-berlin.de.
-You have the right to lodge a complaint with a supervisory authority if you believe that the processing of personal data concerning you violates legal regulations.
+You have the right to request information from the university about the data stored about you and/or to have incorrect data corrected. You also have the right to deletion or to restrict processing or to object to processing. In addition, you have the right, in the event that you have given consent as the legal basis for processing, to revoke your consent at any time. The legality of the processing carried out on the basis of the consent until the revocation is not affected by this. In this case, please contact the following person: Andre Beinrucker, [andre.beinrucker\@htw-berlin.de](mailto:andre.beinrucker@htw-berlin.de){.email}. You have the right to lodge a complaint with a supervisory authority if you believe that the processing of personal data concerning you violates legal regulations.
 
 ##### 5. Information about your right to object according to Art. 21 para. 1 GDPR
 
 You have the right to object at any time, for reasons arising from your particular situation, to the processing of personal data concerning you, which is carried out on the basis of Art. 6 para. 1 lit. e GDPR (data processing in the public interest).
-
 :::
-
